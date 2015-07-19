@@ -4,7 +4,9 @@ import akka.stream.actor.ActorSubscriber
 import akka.stream.actor.ActorSubscriberMessage._
 import com.typesafe.scalalogging.slf4j.StrictLogging
 
-class PrintCharActor extends ActorSubscriber with StrictLogging {
+abstract class BaseStat extends ActorSubscriber with StrictLogging {
+
+  def collectedStats: String
 
   def nextChar(ch: Char) = logger.debug("received char: " + ch)
 
@@ -18,6 +20,7 @@ class PrintCharActor extends ActorSubscriber with StrictLogging {
 
     case OnComplete => {
       logger.debug("the end")
+      sendStats()
       terminate()
     }
 
@@ -26,6 +29,10 @@ class PrintCharActor extends ActorSubscriber with StrictLogging {
       terminate()
     }
 
+  }
+
+  def sendStats(): Unit = {
+    context.system.actorSelection("/user/collector") ! collectedStats
   }
 
   def terminate(): Unit = {

@@ -15,7 +15,9 @@ object TextStatisticsApp extends App with StrictLogging {
 
   val readFileSource = Source(() => scala.io.Source.fromFile(fileName).iter)
 
-  val terminator = system.actorOf(Props(classOf[Terminator], statisticHandlers.size), "terminator")
+  system.actorOf(Props(classOf[Terminator], statisticHandlers.size), "terminator")
+
+  system.actorOf(Props[Collector], "collector")
 
   val graph = FlowGraph.closed() { implicit builder =>
     import FlowGraph.Implicits._
@@ -30,10 +32,8 @@ object TextStatisticsApp extends App with StrictLogging {
 
   graph.run()
 
-
-
   def statisticHandlers = List(
-    Props[PrintCharActor]
+    Props[LineCountStat]
   )
 
 }
