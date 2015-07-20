@@ -33,7 +33,8 @@ object TextStatisticsApp extends App with StrictLogging {
   graph.run()
 
   def statisticHandlers = List(
-    Props[LineCountStat]
+    Props[LineCountStat],
+    Props[WordCountStat]
   )
 
 }
