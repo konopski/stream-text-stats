@@ -9,7 +9,7 @@ object WordLen {
   final case class Len(len: Int)
 }
 
-class WordLen extends Actor {
+class WordLen(val countLettersOnly: Boolean = false) extends Actor {
   var nonWsCharsBefore: Int = 0
 
   override def receive: Receive = {
@@ -17,6 +17,8 @@ class WordLen extends Actor {
       if(c.isWhitespace) {
         sender ! Len(nonWsCharsBefore)
         nonWsCharsBefore = 0
+      } else if(countLettersOnly) {
+        if(c.isLetter) nonWsCharsBefore += 1
       }
       else nonWsCharsBefore += 1
     }
