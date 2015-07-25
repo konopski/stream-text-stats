@@ -3,13 +3,12 @@ package konopski
 
 import akka.actor.{ActorRef, Props}
 import akka.stream.actor.ActorSubscriberMessage.{OnNext, OnComplete}
-import konopski.BaseStat
 
 class AvgWordLenStat extends BaseStat {
   var wordLen: ActorRef = null
 
   override def preStart() = {
-    wordLen = context.actorOf(Props(classOf[WordLen], true), "word-len-for-avg-word-len")
+    wordLen = context.actorOf(Props(classOf[WordLen], (c: Char) => c.isLetter), "word-len-for-avg-word-len")
   }
 
   override def nextChar(ch: Char) = { wordLen ! ch }

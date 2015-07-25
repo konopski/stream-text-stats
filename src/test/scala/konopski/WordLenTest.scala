@@ -12,7 +12,7 @@ class WordLenTest extends FunSuite with BeforeAndAfter {
 
   before {
     system = ActorSystem("test-system")
-    wordLen = system.actorOf(Props[WordLen])
+    wordLen = system.actorOf(Props(classOf[WordLen], (c: Char) => true))
     p = TestProbe()
   }
 
