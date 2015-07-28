@@ -34,7 +34,9 @@ object TextStatisticsApp extends App with StrictLogging {
 
   def statisticHandlers = List(
     Props[LineCountStat],
-    Props[WordCountStat]
+    Props[WordCountStat],
+    Props[MostCommonLetterStat],
+    Props[AvgWordLenStat]
   )
 
 }
