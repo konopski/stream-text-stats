@@ -13,7 +13,7 @@ class AvgWordLenStat extends BaseStat {
   val avgCalculator = new AvgCalculator()
 
   override def preStart() = {
-    wordLen = context.actorOf(Props(classOf[WordLen], true), "word-len-for-avg-word-len")
+    wordLen = context.actorOf(Props(classOf[WordLen], (c: Char) => c.isLetter), "word-len-for-avg-word-len")
   }
 
   override def nextChar(ch: Char) = { wordLen ! ch }

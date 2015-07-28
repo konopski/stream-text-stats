@@ -8,7 +8,7 @@ class WordCountStat extends BaseStat {
   var wordLen: ActorRef = null
 
   override def preStart() = {
-    wordLen = context.actorOf(Props(classOf[WordLen], false), "word-len-for-word-count")
+    wordLen = context.actorOf(Props(classOf[WordLen], (_: Char) => true), "word-len-for-word-count")
   }
 
   override def nextChar(ch: Char) = { wordLen ! ch }

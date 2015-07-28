@@ -12,7 +12,7 @@ class WordLenTest extends FunSuite with BeforeAndAfter {
 
   before {
     system = ActorSystem("test-system")
-    wordLen = system.actorOf(Props(classOf[WordLen], false))
+    wordLen = system.actorOf(Props(classOf[WordLen], (c: Char) => true))
     p = TestProbe()
   }
 
@@ -56,7 +56,7 @@ class WordLenTest extends FunSuite with BeforeAndAfter {
   }
 
   test("should respond with 1 to A<space>") {
-    val givenChars = "A "
+    val givenChars = List('A', ' ')
 
     //when
     for(givenChar<- givenChars)
@@ -66,7 +66,7 @@ class WordLenTest extends FunSuite with BeforeAndAfter {
   }
 
   test("should not respond to ABC") {
-    val givenChars = "ABC"
+    val givenChars = List('A', 'B', 'C')
     val expectedResp = 3
 
     //when
@@ -78,7 +78,7 @@ class WordLenTest extends FunSuite with BeforeAndAfter {
   }
 
   test("should respond with 3 to ABC<space>") {
-    val givenChars = "ABC "
+    val givenChars = List('A', 'B', 'C', ' ')
     val expectedResp = 3
 
     //when
@@ -90,7 +90,7 @@ class WordLenTest extends FunSuite with BeforeAndAfter {
   }
 
   test("should respond with 0 to 3 spaces") {
-    val givenChars = "   "
+    val givenChars = List(' ', ' ', ' ')
     val expectedResp = 0
 
     //when
@@ -100,19 +100,6 @@ class WordLenTest extends FunSuite with BeforeAndAfter {
       //then
       p.expectMsg(Len(0))
     }
-  }
-
-  test("should respond with 3 to word containing not only letters") {
-    val givenChars = "A2B5!5[C "
-    val expectedResp = 3
-
-    //when
-    val wordLenJustLetters = system.actorOf(Props(classOf[WordLen], true))
-    for(givenChar <- givenChars)
-      p.send(wordLenJustLetters, givenChar)
-
-    //then
-    p.expectMsg(Len(3))
   }
 
 }
